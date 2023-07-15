@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
 import tcod
 
-from actions import EscapeAction, MovementAction
+from actions import EscapeAction, MovementAction, FullscreenAction
 from input_handlers import EventHandler
+
+def toggle_fullscreen(context: tcod.context.Context) -> None:
+    """Toggle a context window between fullscreen and windowed modes."""
+    if not context.sdl_window_p:
+        return
+    fullscreen = tcod.lib.SDL_GetWindowFlags(context.sdl_window_p) & (
+        tcod.lib.SDL_WINDOW_FULLSCREEN | tcod.lib.SDL_WINDOW_FULLSCREEN_DESKTOP
+    )
+    tcod.lib.SDL_SetWindowFullscreen(
+        context.sdl_window_p,
+        0 if fullscreen else tcod.lib.SDL_WINDOW_FULLSCREEN_DESKTOP,
+    )
 
 def main() -> None:
     screen_width = 80
@@ -21,7 +33,7 @@ def main() -> None:
         screen_width,
         screen_height,
         tileset=tileset,
-        title="Yet Another Roguelike Tutorial",
+        title="roguelike",
         vsync=True,
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
@@ -45,6 +57,8 @@ def main() -> None:
                 elif isinstance(action, EscapeAction):
                     raise SystemExit()
 
+                elif isinstance(action, FullscreenAction):
+                    toggle_fullscreen(context)
 
 if __name__ == "__main__":
     main()
