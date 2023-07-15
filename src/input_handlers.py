@@ -2,7 +2,7 @@ from typing import Optional
 
 import tcod.event
 
-from actions import Action, EscapeAction, MovementAction, FullscreenAction
+from actions import Action, EscapeAction, MovementAction
 
 class EventHandler(tcod.event.EventDispatch[Action]):
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
@@ -12,12 +12,6 @@ class EventHandler(tcod.event.EventDispatch[Action]):
         action: Optional[Action] = None
 
         key = event.sym
-
-        # alt+enter to fullscreen
-        keyboardState = tcod.event.get_keyboard_state()
-        isAltHeld = keyboardState[tcod.event.KeySym.LALT.scancode] or keyboardState[tcod.event.KeySym.RALT.scancode]
-        if key == tcod.event.K_RETURN and isAltHeld:
-            action = FullscreenAction()
 
         # arrow keys movement
         if key == tcod.event.K_UP:
