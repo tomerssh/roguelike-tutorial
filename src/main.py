@@ -57,8 +57,9 @@ def main() -> None:
             engine.handle_events(events)
 
             # alt+enter to fullscreen
-            is_alt_held = tcod.event.get_modifier_state().ALT
-            is_enter_held = tcod.event.get_keyboard_state()[tcod.event.Scancode.RETURN]
+            keyboard_state = tcod.event.get_keyboard_state()
+            is_alt_held = keyboard_state[tcod.event.KeySym.LALT.scancode] or keyboard_state[tcod.event.KeySym.RALT.scancode]
+            is_enter_held = keyboard_state[tcod.event.Scancode.RETURN]
             if is_alt_held and is_enter_held:
                 toggle_fullscreen(context)
 
